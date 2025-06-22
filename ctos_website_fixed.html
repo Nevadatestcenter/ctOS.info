@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ctOS - Central Operating System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #000000 0%, #001122 50%, #002244 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 2px solid #4A9EFF;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4A9EFF;
+            text-shadow: 0 0 10px #4A9EFF;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #4A9EFF;
+            text-shadow: 0 0 5px #4A9EFF;
+        }
+
+        .nav-links a:before {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #4A9EFF;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover:before {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px #4A9EFF;
+            animation: glitch 3s infinite;
+            color: #4A9EFF;
+        }
+
+        @keyframes glitch {
+            0%, 90%, 100% { transform: translate(0); }
+            10% { transform: translate(-2px, -2px); }
+            20% { transform: translate(2px, 2px); }
+            30% { transform: translate(-2px, 2px); }
+            40% { transform: translate(2px, -2px); }
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: #ffffff;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #4A9EFF, #0066CC);
+            color: #ffffff;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-transform: uppercase;
+            border: 1px solid #4A9EFF;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(74, 158, 255, 0.3);
+            background: linear-gradient(45deg, #ffffff, #f0f8ff);
+            color: #000000;
+        }
+
+        /* Background Animation */
+        .matrix-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .matrix-code {
+            position: absolute;
+            font-size: 14px;
+            color: #4A9EFF;
+            opacity: 0.2;
+            animation: fall 10s linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100vh); }
+            100% { transform: translateY(100vh); }
+        }
+
+        /* Sections */
+        section {
+            padding: 5rem 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #4A9EFF;
+            text-shadow: 0 0 10px #4A9EFF;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .info-card {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid #4A9EFF;
+            border-radius: 10px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(74, 158, 255, 0.3);
+            border-color: #ffffff;
+        }
+
+        .info-card h3 {
+            color: #4A9EFF;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .info-card p {
+            color: #ffffff;
+            line-height: 1.8;
+        }
+
+        /* Features Section */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-item {
+            background: linear-gradient(135deg, rgba(74, 158, 255, 0.1), rgba(0, 102, 204, 0.1));
+            border: 1px solid #4A9EFF;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, rgba(74, 158, 255, 0.2), rgba(0, 102, 204, 0.2));
+            box-shadow: 0 10px 20px rgba(74, 158, 255, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #4A9EFF;
+        }
+
+        /* Image Gallery */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .gallery-item {
+            background: #000000;
+            border: 2px solid #4A9EFF;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(74, 158, 255, 0.4);
+        }
+
+        .gallery-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 5px;
+            border: 1px solid #4A9EFF;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-img:hover {
+            transform: scale(1.02);
+            border-color: #ffffff;
+        }
+
+        .gallery-caption {
+            color: #4A9EFF;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-top: auto;
+        }
+
+        .placeholder-img {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(45deg, #000000, #001122);
+            border: 1px dashed #4A9EFF;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #4A9EFF;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .placeholder-img::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(74, 158, 255, 0.1), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .placeholder-img small {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Terminal Section */
+        .terminal {
+            background: #000000;
+            border: 2px solid #4A9EFF;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 2rem 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .terminal-header {
+            color: #4A9EFF;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .terminal-content {
+            color: #ffffff;
+            line-height: 1.4;
+        }
+
+        .terminal-cursor {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.95);
+            border-top: 2px solid #4A9EFF;
+            padding: 2rem 0;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #000000;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4A9EFF;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">ctOS</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">Über ctOS</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#gallery">Galerie</a></li>
+                <li><a href="#system">System</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="matrix-bg">
+                <div class="matrix-code" style="left: 10%; animation-delay: 0s;">01010101</div>
+                <div class="matrix-code" style="left: 20%; animation-delay: 1s;">11001100</div>
+                <div class="matrix-code" style="left: 30%; animation-delay: 2s;">10101010</div>
+                <div class="matrix-code" style="left: 40%; animation-delay: 0.5s;">11110000</div>
+                <div class="matrix-code" style="left: 50%; animation-delay: 1.5s;">00111100</div>
+                <div class="matrix-code" style="left: 60%; animation-delay: 2.5s;">10011001</div>
+                <div class="matrix-code" style="left: 70%; animation-delay: 0.8s;">01100110</div>
+                <div class="matrix-code" style="left: 80%; animation-delay: 1.8s;">11111111</div>
+                <div class="matrix-code" style="left: 90%; animation-delay: 2.2s;">00000000</div>
+            </div>
+            <div class="hero-content">
+                <h1>ctOS 2.0</h1>
+                <p>Central Operating System - Die Zukunft der Stadtsteuerung</p>
+                <a href="#about" class="cta-button">System erkunden</a>
+            </div>
+        </section>
+
+        <section id="about">
+            <div class="container">
+                <h2 class="section-title">Über ctOS</h2>
+                <div class="about-grid">
+                    <div class="info-card">
+                        <h3>Was ist ctOS?</h3>
+                        <p>ctOS (Central Operating System) ist ein fortschrittliches Betriebssystem aus Watch Dogs 2, das die gesamte Infrastruktur von San Francisco Bay Area steuert. Es verbindet alles - von Verkehrsampeln bis zu Smartphones - in einem einzigen Netzwerk.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Entwicklung</h3>
+                        <p>Nach dem Dedsec-Hack von ctOS 1.0 in Chicago wurde das System komplett überarbeitet. ctOS 2.0 ist sicherer, effizienter und noch tiefer in das Leben der Bürger integriert.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Blume Corporation</h3>
+                        <p>Entwickelt von der Blume Corporation, repräsentiert ctOS 2.0 die nächste Generation der Smart City-Technologie. Das Unternehmen behauptet, Sicherheit und Effizienz zu verbessern.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features">
+            <div class="container">
+                <h2 class="section-title">System Features</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon">🚦</div>
+                        <h3>Verkehrssteuerung</h3>
+                        <p>Intelligente Ampelschaltung und Verkehrsflussoptimierung</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📱</div>
+                        <h3>Smartphone Integration</h3>
+                        <p>Direkter Zugriff auf mobile Geräte und persönliche Daten</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🔒</div>
+                        <h3>Sicherheitssystem</h3>
+                        <p>Überwachung und Kontrolle aller Sicherheitskameras</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Energiemanagement</h3>
+                        <p>Steuerung der Stromversorgung und Infrastruktur</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🌐</div>
+                        <h3>Netzwerk-Hub</h3>
+                        <p>Zentrale Verbindung aller vernetzten Geräte</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">👁️</div>
+                        <h3>Bürgerprofiling</h3>
+                        <p>Erstellung detaillierter Profile basierend auf digitalem Verhalten</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="gallery">
+            <div class="container">
+                <h2 class="section-title">Visuelle Impressionen</h2>
+                <div class="gallery">
+                    <div class="gallery-item">
+                        <div class="placeholder-img">
+                            💻 ctOS 2.0 Interface<br>
+                            <small>Hauptmenü und Systemübersicht</small>
+                        </div>
+                        <div class="gallery-caption">ctOS 2.0 Interface</div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="placeholder-img">
+                            🎮 Hacking Interface<br>
+                            <small>Marcus' Hacktools</small>
+                        </div>
+                        <div class="gallery-caption">ctOS HUD System</div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="placeholder-img">
+                            🏢 Blume Corporation<br>
+                            <small>Unternehmenslogo</small>
+                        </div>
+                        <div class="gallery-caption">Blume Corporation</div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="placeholder-img">
+                            🌉 San Francisco<br>
+                            <small>ctOS-vernetzte Stadt</small>
+                        </div>
+                        <div class="gallery-caption">ctOS-vernetzte Stadt</div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="placeholder-img">
+                            ⚡ DedSec Logo<br>
+                            <small>Hacker-Kollektiv</small>
+                        </div>
+                        <div class="gallery-caption">DedSec Hacker-Kollektiv</div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="placeholder-img">
+                            👤 Marcus beim Hacken<br>
+                            <small>Gameplay Screenshot</small>
+                        </div>
+                        <div class="gallery-caption">Marcus beim Hacken</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="system">
+            <div class="container">
+                <h2 class="section-title">System Terminal</h2>
+                <div class="terminal">
+                    <div class="terminal-header">ctOS 2.0 - System Status</div>
+                    <div class="terminal-content">
+                        > Initialisiere ctOS 2.0...<br>
+                        > Verbinde zu Netzwerk-Knoten...<br>
+                        > Status: ONLINE<br>
+                        > Aktive Verbindungen: 2,847,392<br>
+                        > Überwachte Geräte: 15,983,724<br>
+                        > Sicherheitslevel: MAXIMUM<br>
+                        > Anomalien erkannt: 0<br>
+                        > Letzte DedSec Aktivität: 00:00:00<br>
+                        > System bereit für Befehle<span class="terminal-cursor">_</span>
+                    </div>
+                </div>
+                
+                <div class="about-grid">
+                    <div class="info-card">
+                        <h3>Technische Spezifikationen</h3>
+                        <p><strong>Version:</strong> ctOS 2.0.1<br>
+                        <strong>Entwickler:</strong> Blume Corporation<br>
+                        <strong>Architektur:</strong> Distributed Computing<br>
+                        <strong>Sicherheit:</strong> AES-256 Verschlüsselung<br>
+                        <strong>Uptime:</strong> 99.97%</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Gameplay Integration</h3>
+                        <p>In Watch Dogs 2 kann der Spieler Marcus Holloway das ctOS-System hacken und manipulieren. Von der Steuerung von Verkehrsampeln bis hin zum Zugriff auf Überwachungskameras - ctOS ist das zentrale Element des Gameplay-Erlebnisses.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Ethische Fragen</h3>
+                        <p>Das Spiel stellt wichtige Fragen über Überwachung, Privatsphäre und die Macht der Technologie. ctOS symbolisiert die Gefahren einer total vernetzten Gesellschaft und die Möglichkeiten des Missbrauchs.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 ctOS Information Portal - Watch Dogs 2 Fan Site</p>
+            <p>Erstellt für Bildungszwecke - Alle Rechte bei Ubisoft</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add more matrix code elements dynamically
+        function createMatrixCode() {
+            const matrixBg = document.querySelector('.matrix-bg');
+            const codes = ['01010101', '11001100', '10101010', '11110000', '00111100', '10011001', '01100110', '11111111', '00000000'];
+            
+            setInterval(() => {
+                const code = document.createElement('div');
+                code.className = 'matrix-code';
+                code.textContent = codes[Math.floor(Math.random() * codes.length)];
+                code.style.left = Math.random() * 100 + '%';
+                code.style.animationDelay = Math.random() * 2 + 's';
+                matrixBg.appendChild(code);
+                
+                setTimeout(() => {
+                    code.remove();
+                }, 10000);
+            }, 3000);
+        }
+
+        // Terminal typing effect
+        function typeTerminal() {
+            const terminal = document.querySelector('.terminal-content');
+            const text = terminal.innerHTML;
+            terminal.innerHTML = '';
+            
+            let i = 0;
+            const typeInterval = setInterval(() => {
+                if (i < text.length) {
+                    terminal.innerHTML += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typeInterval);
+                }
+            }, 50);
+        }
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Apply animations to cards
+        document.querySelectorAll('.info-card, .feature-item, .gallery-item').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createMatrixCode();
+            setTimeout(typeTerminal, 1000);
+        });
+    </script>
+</body>
+</html>
